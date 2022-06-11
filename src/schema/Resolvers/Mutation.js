@@ -22,6 +22,7 @@ const Mutation = new GraphQLObjectType({
                 const { data: newUser, error } = await pgClient
                     .from('users')
                     .insert(payload)
+                    .single()
 
                 if (error) throw new AuthenticationError(error.details);
 
