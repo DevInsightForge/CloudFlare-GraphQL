@@ -4,11 +4,7 @@ import schema from '../schema';
 
 const server = new ApolloServer({
     schema,
-    introspection: true,
-    cors: {
-        origin: '*',
-        credentials: true
-    },
+    introspection: true, // enable introspection in apollo studio
 })
 
 const serverStartTrigger = server.start();
