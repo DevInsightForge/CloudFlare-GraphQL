@@ -12,9 +12,8 @@ const RootQuery = new GraphQLObjectType({
                     .from('users')
                     .select('*')
 
-                if (error) {
-                    throw new Error(error.message);
-                }
+                if (error) throw new Error(error.message);
+
                 // remove password from response
                 users.forEach(user => delete user.password);
                 return users;

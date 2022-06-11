@@ -6,28 +6,29 @@ import pgClient from "../../utils/pgClient";
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
-        // signup: {
-        //     type: UserType,
-        //     args: {
-        //         name: { type: GraphQLString },
-        //         email: { type: GraphQLString },
-        //         password: { type: GraphQLString },
-        //     },
-        //     async resolve(parent, args) {
-        //         // const userExists = await UserModel.findOne({ email: args.email });
-        //         if (userExists) {
-        //             throw new AuthenticationError("User with this email already exists");
-        //         }
-        //         const payload = {
-        //             name: args.name,
-        //             email: args.email,
-        //             password: args.password,
-        //         }
-        //         // const newUser = await UserModel.create(payload);
-        //         const { password, ...userReturn } = newUser.toObject();
-        //         return userReturn;
-        //     },
-        // },
+        signup: {
+            type: UserType,
+            args: {
+                name: { type: GraphQLString },
+                email: { type: GraphQLString },
+                password: { type: GraphQLString },
+            },
+            async resolve(parent, args) {
+                const payload = {
+                    name: args.name,
+                    email: args.email,
+                    password: args.password,
+                }
+                const { data: newUser, error } = await pgClient
+                    .from('users')
+                    .insert(payload)
+
+                if (error) throw new AuthenticationError(error.details);
+
+                const { password, ...userReturn } = newUser;
+                return userReturn;
+            },
+        },
         signin: {
             type: UserType,
             args: {
@@ -40,6 +41,9 @@ const Mutation = new GraphQLObjectType({
                     .select("*")
                     .eq('email', args.email)
                     .single();
+
+                if (error) throw new AuthenticationError(error.details);
+
                 if (user && user.password === args.password) {
                     const { password, ...userReturn } = user;
                     return userReturn;
