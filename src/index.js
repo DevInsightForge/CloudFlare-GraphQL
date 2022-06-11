@@ -1,41 +1,23 @@
-import { ApolloServer } from 'apollo-server-cloudflare';
-import schema from './schema';
+import apolloHandler from './handlers/apolloHandler';
+import setCors from './utils/setCors';
 
-const server = new ApolloServer({
-  schema,
-  introspection: true,
-  // csrfPrevention: true,
-  cors: {
-    origin: '*',
-    credentials: true
-  },
-  // createGraphQLServerOptions: async (request) => {
-  //   return {
-  //     context: {
-  //       headers: request.headers,
-  //       ip: request.ip,
-  //       user: request.user
-  //     }
-  //   };
-  // }
-})
-
-const startServer = server.start();
-
+// Define request handler
 const handleRequest = async (request) => {
-  // if (request.method !== "POST") {
-  //   return new Response(`Method ${request.method} not allowed`, { status: 405 });
-  // }
-  try {
-    await startServer;
-    // return graphqlCloudflare(() => server.createGraphQLServerOptions(request))(
-    //   request
-    // )
-    return await server.listen(request);
-  } catch (error) {
-    return new Response(error, { status: 500 });
+  if (request.method === 'OPTIONS') {
+    return setCors(new Response('', { status: 200 }));
   }
+  else if (request.method === 'POST') {
+    return setCors(await apolloHandler(request));
+  }
+  else {
+    return setCors(new Response(`Method ${request.method} not supported`, { status: 405 }));
+  }
+
 }
 
-// Listen for incoming requests
-addEventListener('fetch', event => server.listen(event.request));
+
+// attach handler to fetch event
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+});
+
