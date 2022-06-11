@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
 import UserType from "../TypeDefs/UserType";
 import { AuthenticationError } from "apollo-server-core";
+import pgClient from "../../utils/pgClient";
 
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
@@ -34,18 +35,17 @@ const Mutation = new GraphQLObjectType({
                 password: { type: GraphQLString },
             },
             async resolve(parent, args) {
-                // const user = await UserModel.findOne({ email: args.email });
-                // if (user && user.password === args.password) {
-                //     const { password, ...userReturn } = user.toObject();
-                //     return userReturn;
-                // }
-                // else {
-                //     throw new AuthenticationError("Invalid Credentials. Please Try Again!");
-                // }
-                return {
-                    name: "John Doe",
-                    email: "test@admin.com",
-                    password: "123"
+                const { data: user, error } = await pgClient
+                    .from('users')
+                    .select("*")
+                    .eq('email', args.email)
+                    .single();
+                if (user && user.password === args.password) {
+                    const { password, ...userReturn } = user;
+                    return userReturn;
+                }
+                else {
+                    throw new AuthenticationError("Invalid Credentials. Please Try Again!");
                 }
             }
         }
