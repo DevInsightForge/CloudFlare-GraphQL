@@ -21,8 +21,8 @@ jobs:
       - run: yarn install
 
       - name: Publish
-        uses: cloudflare/wrangler-action@1.2.0
+        uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-        env:
-          CF_ACCOUNT_ID: ${{secrets.CF_ACCOUNT_ID}}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          wranglerVersion: "1.19.8"
