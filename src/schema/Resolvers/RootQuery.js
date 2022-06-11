@@ -1,4 +1,5 @@
-import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLList, GraphQLObjectType } from "graphql";
+import pgClient from "../../utils/pgClient";
 import UserType from "../TypeDefs/UserType";
 
 const RootQuery = new GraphQLObjectType({
@@ -7,13 +8,14 @@ const RootQuery = new GraphQLObjectType({
         getAllUsers: {
             type: new GraphQLList(UserType),
             async resolve(parent, args) {
-                // const users = await UserModel.find({});
-                // return users;
-                return [ {
-                    name: "John Doe",
-                    email: "abc@gt.com",
-                    password: "123456"
-                } ]
+                const { data: users, error } = await pgClient
+                    .from('users')
+                    .select('*')
+
+                if (error) {
+                    throw new Error(error)
+                }
+                return users
             },
         }
     },
