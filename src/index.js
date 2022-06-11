@@ -1,44 +1,41 @@
-import { ApolloServer, gql } from 'apollo-server-cloudflare';
-import { graphqlCloudflare } from 'apollo-server-cloudflare/dist/cloudflareApollo';
-import RootQuery from './schema/Resolvers/RootQuery';
-import Mutation from './schema/Resolvers/Mutation';
-import { GraphQLSchema } from 'graphql';
+import { ApolloServer } from 'apollo-server-cloudflare';
+import schema from './schema';
 
 const server = new ApolloServer({
-  schema: new GraphQLSchema({ query: RootQuery, mutation: Mutation }),
+  schema,
   introspection: true,
-  csrfPrevention: true,
+  // csrfPrevention: true,
   cors: {
     origin: '*',
     credentials: true
   },
+  // createGraphQLServerOptions: async (request) => {
+  //   return {
+  //     context: {
+  //       headers: request.headers,
+  //       ip: request.ip,
+  //       user: request.user
+  //     }
+  //   };
+  // }
 })
 
 const startServer = server.start();
 
 const handleRequest = async (request) => {
-  if (request.method === "OPTIONS") {
-    return new Response("", {
-      status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
-        "Access-Control-Allow-Credentials": true,
-      }
-    });
-  }
+  // if (request.method !== "POST") {
+  //   return new Response(`Method ${request.method} not allowed`, { status: 405 });
+  // }
   try {
     await startServer;
-    return graphqlCloudflare(() => server.createGraphQLServerOptions(request))(
-      request
-    )
+    // return graphqlCloudflare(() => server.createGraphQLServerOptions(request))(
+    //   request
+    // )
+    return await server.listen(request);
   } catch (error) {
     return new Response(error, { status: 500 });
   }
 }
 
 // Listen for incoming requests
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
+addEventListener('fetch', event => server.listen(event.request));
