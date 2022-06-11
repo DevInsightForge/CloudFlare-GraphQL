@@ -1,4 +1,4 @@
-name = "my-worker-gql"
+name = "cgql"
 main = "src/index.js"
 
 node_compat = true

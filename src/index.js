@@ -1,42 +1,11 @@
 import { ApolloServer, gql } from 'apollo-server-cloudflare';
 import { graphqlCloudflare } from 'apollo-server-cloudflare/dist/cloudflareApollo';
+import RootQuery from './schema/Resolvers/RootQuery';
+import Mutation from './schema/Resolvers/Mutation';
+import { GraphQLSchema } from 'graphql';
 
-const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
-`;
-
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-];
-
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema: new GraphQLSchema({ query: RootQuery, mutation: Mutation }),
   introspection: true,
   csrfPrevention: true,
   cors: {
@@ -59,10 +28,14 @@ const handleRequest = async (request) => {
       }
     });
   }
-  await startServer;
-  return graphqlCloudflare(() => server.createGraphQLServerOptions(request))(
-    request
-  )
+  try {
+    await startServer;
+    return graphqlCloudflare(() => server.createGraphQLServerOptions(request))(
+      request
+    )
+  } catch (error) {
+    return new Response(error, { status: 500 });
+  }
 }
 
 // Listen for incoming requests
