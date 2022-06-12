@@ -14,9 +14,16 @@ const Mutation = new GraphQLObjectType({
                 password: { type: GraphQLString },
             },
             async resolve(parent, args) {
+
+                // validate email and password
+                if (!args.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
+                    throw new AuthenticationError("Invalid Email Address");
+                if (!args.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/))
+                    throw new AuthenticationError("Password must contain at least one uppercase, one lowercase, one number and one special character");
+
                 const payload = {
                     name: args.name,
-                    email: args.email,
+                    email: args.email.toLowerCase(),
                     password: args.password,
                 }
                 const { data: newUser, error } = await pgClient
@@ -40,17 +47,17 @@ const Mutation = new GraphQLObjectType({
                 const { data: user, error } = await pgClient
                     .from('users')
                     .select("*")
-                    .eq('email', args.email)
+                    .eq('email', args.email.toLowerCase())
                     .single();
 
-                if (error) throw new AuthenticationError(error.details);
+                if (error) throw new AuthenticationError("No user associated with this email. Please sign up.");
 
                 if (user && user.password === args.password) {
                     const { password, ...userReturn } = user;
                     return userReturn;
                 }
                 else {
-                    throw new AuthenticationError("Invalid Credentials. Please Try Again!");
+                    throw new AuthenticationError("Incorrect password. Please Try Again!");
                 }
             }
         }
