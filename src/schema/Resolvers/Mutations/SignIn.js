@@ -25,12 +25,10 @@ const SignIn = {
             const userToken = {
                 accessToken: await jwt.sign({
                     name,
-                    email,
                     exp: Math.floor(Date.now() / 1000) + (12 * (60 * 60)) // Expires: Now + 12h
                 }, `cgqlJWT${password}`),
 
                 refreshToken: await jwt.sign({
-                    name,
                     email,
                     exp: Math.floor(Date.now() / 1000) + (7 * (24 * 60 * 60)) // Expires: Now + 7d
                 }, `cgqlJWT${password}`)
