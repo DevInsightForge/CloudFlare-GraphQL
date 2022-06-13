@@ -9,8 +9,10 @@ const RefreshJWT = {
     args: {
         refreshToken: { type: GraphQLString }
     },
-    async resolve(parent, args) {
-        const { payload } = jwt.decode(args.refreshToken);
+    async resolve(parent, { refreshToken }) {
+        if (!refreshToken) throw new AuthenticationError("No refresh token provided");
+
+        const { payload } = jwt.decode(refreshToken);
         if (!payload.email) throw new AuthenticationError("Invalid token. Please try again.");
 
         const { data: user, error } = await pgClient
@@ -20,7 +22,7 @@ const RefreshJWT = {
             .single();
         if (error) throw new AuthenticationError("No user associated with this token. Please sign up.");
 
-        const isValid = await jwt.verify(args.refreshToken, `cgqlJWT${user.password}`);
+        const isValid = await jwt.verify(refreshToken, `cgqlJWT${user.password}`);
         if (!isValid) throw new AuthenticationError("Provided token is either expired or invalid.");
 
         const userToken = {
@@ -28,7 +30,7 @@ const RefreshJWT = {
                 name: user.name,
                 exp: Math.floor(Date.now() / 1000) + (12 * (60 * 60)) // Expires: Now + 12h
             }, `cgqlJWT${user.password}`),
-            refreshToken: args.refreshToken
+            refreshToken
         }
 
         return userToken;
