@@ -1,12 +1,11 @@
-// import createType from 'mongoose-schema-to-graphql';
-import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql';
+import { GraphQLObjectType, GraphQLString } from 'graphql';
 
 const UserType = new GraphQLObjectType({
     name: 'User',
     fields: {
         name: { type: GraphQLString },
         email: { type: GraphQLString },
-        password: { type: GraphQLString },
+        password: { type: GraphQLString }
     }
 });
 

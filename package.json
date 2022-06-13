@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.35.3",
+    "@tsndr/cloudflare-worker-jwt": "^1.4.2",
     "apollo-server-cloudflare": "^3.8.2",
     "graphql": "^16.5.0"
   },
