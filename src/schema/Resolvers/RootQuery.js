@@ -1,12 +1,12 @@
 import { GraphQLObjectType } from "graphql";
 import GetAllUsers from "./Queries/GetAllUsers";
-import GetOwnProfile from "./Queries/GetOwnProfile";
+import GetOwnUser from "./Queries/GetOwnUser";
 
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
         getAllUsers: GetAllUsers,
-        getOwnProfile: GetOwnProfile,
+        getOwnUser: GetOwnUser,
     },
 });
 

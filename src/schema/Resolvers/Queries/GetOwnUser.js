@@ -2,7 +2,7 @@ import { AuthenticationError } from "apollo-server-cloudflare";
 import pgClient from "../../../utils/pgClient";
 import UserType from "../../TypeDefs/UserType";
 
-const GetOwnProfile = {
+const GetOwnUser = {
     type: UserType,
     async resolve(parent, args, { user, authError }) {
         if (!user) throw new AuthenticationError(authError);
@@ -13,7 +13,7 @@ const GetOwnProfile = {
             .eq('id', user.id)
             .single();
 
-        if (error) throw new Error("Error getting user list from database");
+        if (error) throw new Error("Error getting user from database");
 
         // remove password from response
         delete data.password
@@ -21,4 +21,4 @@ const GetOwnProfile = {
     },
 }
 
-export default GetOwnProfile;
+export default GetOwnUser;
