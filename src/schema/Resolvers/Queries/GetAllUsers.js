@@ -5,8 +5,8 @@ import UserType from "../../TypeDefs/UserType";
 
 const GetAllUsers = {
     type: new GraphQLList(UserType),
-    async resolve(parent, args, { user, authError }) {
-        if (!user) throw new AuthenticationError(authError);
+    async resolve(parent, args, { authError }) {
+        if (authError) throw new AuthenticationError(authError);
 
         const { data: users, error } = await pgClient
             .from('users')

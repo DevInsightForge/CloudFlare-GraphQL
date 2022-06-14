@@ -5,7 +5,7 @@ import UserType from "../../TypeDefs/UserType";
 const GetOwnUser = {
     type: UserType,
     async resolve(parent, args, { user, authError }) {
-        if (!user) throw new AuthenticationError(authError);
+        if (authError) throw new AuthenticationError(authError);
 
         const { data, error } = await pgClient
             .from('users')
