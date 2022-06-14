@@ -1,23 +1,24 @@
 import { AuthenticationError } from "apollo-server-cloudflare";
-import { GraphQLList } from "graphql";
 import pgClient from "../../../utils/pgClient";
 import UserType from "../../TypeDefs/UserType";
 
-const GetAllUsers = {
-    type: new GraphQLList(UserType),
+const GetOwnProfile = {
+    type: UserType,
     async resolve(parent, args, { user, authError }) {
         if (!user) throw new AuthenticationError(authError);
 
-        const { data: users, error } = await pgClient
+        const { data, error } = await pgClient
             .from('users')
             .select('*')
+            .eq('id', user.id)
+            .single();
 
         if (error) throw new Error("Error getting user list from database");
 
         // remove password from response
-        users.forEach(user => delete user.password);
-        return users;
+        delete data.password
+        return data;
     },
 }
 
-export default GetAllUsers;
+export default GetOwnProfile;

@@ -24,25 +24,25 @@ const SignUp = {
             email: args.email.toLowerCase(),
             password: args.password,
         }
-        const { data: newUser, error } = await pgClient
+        const { data: { id, name, email }, error } = await pgClient
             .from('users')
             .insert(payload)
             .single()
 
         if (error) throw new AuthenticationError("Email already exists. Please sign in.");
 
-        const { name, email, password } = newUser;
-
         const userToken = {
             accessToken: await jwt.sign({
+                id,
                 name,
                 exp: Math.floor(Date.now() / 1000) + (12 * (60 * 60)) // Expires: Now + 12h
-            }, `cgqlJWT${password}`),
+            }, `cgqlJWT`),
 
             refreshToken: await jwt.sign({
+                id,
                 email,
                 exp: Math.floor(Date.now() / 1000) + (7 * (24 * 60 * 60)) // Expires: Now + 7d
-            }, `cgqlJWT${password}`)
+            }, `cgqlJWT`)
         }
 
         return userToken;
