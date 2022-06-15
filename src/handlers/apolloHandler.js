@@ -7,7 +7,7 @@ const server = new ApolloServer({
     schema,
     introspection: true, // enable introspection in apollo studio
     context: async ({ request }) => {
-        const { authorization } = Object.fromEntries(request.headers)
+        const authorization = request.headers.get('authorization');
         try {
             if (!authorization) throw new Error('No authorization header found')
             const token = authorization.split(' ')[ 1 ];
