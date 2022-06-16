@@ -1,10 +1,10 @@
-import { GraphQLSchema } from 'graphql';
-import RootQuery from './Resolvers/RootQuery';
-import Mutation from './Resolvers/Mutation';
+import { GraphQLSchema } from "graphql";
+import Mutation from "./Resolvers/Mutation";
+import RootQuery from "./Resolvers/RootQuery";
 
 const schema = new GraphQLSchema({
-    query: RootQuery,
-    mutation: Mutation
+  query: RootQuery,
+  mutation: Mutation,
 });
 
 export default schema;

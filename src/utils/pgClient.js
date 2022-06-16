@@ -1,6 +1,5 @@
+import { createClient } from "@supabase/supabase-js";
 
-import { createClient } from '@supabase/supabase-js'
-
-const pgClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const pgClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default pgClient;

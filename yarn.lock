@@ -26,6 +26,14 @@
   resolved "https://registry.yarnpkg.com/@apollo/utils.dropunuseddefinitions/-/utils.dropunuseddefinitions-1.1.0.tgz#02b04006442eaf037f4c4624146b12775d70d929"
   integrity sha512-jU1XjMr6ec9pPoL+BFWzEPW7VHHulVdGKMkPAMiCigpVIT11VmCbnij0bWob8uS3ODJ65tZLYKAh/55vLw2rbg==
 
+"@apollo/utils.keyvaluecache@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@apollo/utils.keyvaluecache/-/utils.keyvaluecache-1.0.1.tgz#46f310f859067efe9fa126156c6954f8381080d2"
+  integrity sha512-nLgYLomqjVimEzQ4cdvVQkcryi970NDvcRVPfd0OPeXhBfda38WjBq+WhQFk+czSHrmrSp34YHBxpat0EtiowA==
+  dependencies:
+    "@apollo/utils.logger" "^1.0.0"
+    lru-cache "^7.10.1"
+
 "@apollo/utils.logger@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@apollo/utils.logger/-/utils.logger-1.0.0.tgz#6e3460a2250c2ef7c2c3b0be6b5e148a1596f12b"
@@ -76,6 +84,13 @@
   integrity sha512-xCcXpoz52rI4ksJSdOCxeOCn2DLocxwHf9dVT/Q90Pte1LX+LY+91SFtJF3KXVHH8kEin+g1KKCQPKBjZJfWNA==
   dependencies:
     xss "^1.0.8"
+
+"@cloudflare/kv-asset-handler@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.2.0.tgz#c9959bbd7a1c40bd7c674adae98aa8c8d0e5ca68"
+  integrity sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==
+  dependencies:
+    mime "^3.0.0"
 
 "@esbuild-plugins/node-globals-polyfill@^0.1.1":
   version "0.1.1"
@@ -626,12 +641,12 @@ ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-apollo-datasource@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/apollo-datasource/-/apollo-datasource-3.3.1.tgz#a1168dd68371930de3ed4245ad12fa8600efe2cc"
-  integrity sha512-Z3a8rEUXVPIZ1p8xrFL8bcNhWmhOmovgDArvwIwmJOBnh093ZpRfO+ESJEDAN4KswmyzCLDAwjsW4zQOONdRUw==
+apollo-datasource@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/apollo-datasource/-/apollo-datasource-3.3.2.tgz#5711f8b38d4b7b53fb788cb4dbd4a6a526ea74c8"
+  integrity sha512-L5TiS8E2Hn/Yz7SSnWIVbZw0ZfEIXZCa5VUiVxD9P53JvSrf4aStvsFDlGWPvpIdCR+aly2CfoB79B9/JjKFqg==
   dependencies:
-    apollo-server-caching "^3.3.0"
+    "@apollo/utils.keyvaluecache" "^1.0.1"
     apollo-server-env "^4.2.1"
 
 apollo-reporting-protobuf@^3.3.1:
@@ -641,27 +656,21 @@ apollo-reporting-protobuf@^3.3.1:
   dependencies:
     "@apollo/protobufjs" "1.2.2"
 
-apollo-server-caching@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/apollo-server-caching/-/apollo-server-caching-3.3.0.tgz#f501cbeb820a4201d98c2b768c085f22848d9dc5"
-  integrity sha512-Wgcb0ArjZ5DjQ7ID+tvxUcZ7Yxdbk5l1MxZL8D8gkyjooOkhPNzjRVQ7ubPoXqO54PrOMOTm1ejVhsF+AfIirQ==
+apollo-server-cloudflare@^3.9.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/apollo-server-cloudflare/-/apollo-server-cloudflare-3.9.0.tgz#005e02d0ba6cf3da0163557f40297b2c29e6c9c4"
+  integrity sha512-wonWYPAh6iv8G+PDWEDr02q6fiokzlex/p20qOQyCU9muLm+mzVB5Jw1pMqDQWBxaMG1cKdKSi3vby/JONxnew==
   dependencies:
-    lru-cache "^6.0.0"
-
-apollo-server-cloudflare@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-cloudflare/-/apollo-server-cloudflare-3.8.2.tgz#47020625c175e26d8c0d5477613c50524616fa8b"
-  integrity sha512-qfxM1SpHlJ7PL4lvQGha+YpXn3/oQ4WKbAg5OyodTdt8ijUeH+clLcjVvzqGK4yNQEvKa351sILavB4UCPezDA==
-  dependencies:
-    apollo-server-core "^3.8.2"
+    apollo-server-core "^3.9.0"
     apollo-server-env "^4.2.1"
-    apollo-server-types "^3.6.0"
+    apollo-server-types "^3.6.1"
 
-apollo-server-core@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-3.8.2.tgz#a065e00220d6c709b11b824197520adee6d897d2"
-  integrity sha512-cbzG928HG27W+juMVCIL1O//iyAj/Q2hnOu6YwrGrcqeE75ZIJSgSBm/gPHK20cI7nEjK2IWACx8Hj1nGAQ5Zg==
+apollo-server-core@^3.9.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-3.9.0.tgz#44b39e378314cfc0596be7003d3f1f1397c88eea"
+  integrity sha512-WS54C33cTriDaBIcj7ijWv/fgeJICcrQKlP1Cn6pnZp/eumpMraezLeJ3gFWAXprOuR2E3fZe64lNlup0fMu8w==
   dependencies:
+    "@apollo/utils.keyvaluecache" "^1.0.1"
     "@apollo/utils.logger" "^1.0.0"
     "@apollo/utils.usagereporting" "^1.0.0"
     "@apollographql/apollo-tools" "^0.5.3"
@@ -669,13 +678,12 @@ apollo-server-core@^3.8.2:
     "@graphql-tools/mock" "^8.1.2"
     "@graphql-tools/schema" "^8.0.0"
     "@josephg/resolvable" "^1.0.0"
-    apollo-datasource "^3.3.1"
+    apollo-datasource "^3.3.2"
     apollo-reporting-protobuf "^3.3.1"
-    apollo-server-caching "^3.3.0"
     apollo-server-env "^4.2.1"
     apollo-server-errors "^3.3.1"
-    apollo-server-plugin-base "^3.6.0"
-    apollo-server-types "^3.6.0"
+    apollo-server-plugin-base "^3.6.1"
+    apollo-server-types "^3.6.1"
     async-retry "^1.2.1"
     fast-json-stable-stringify "^2.1.0"
     graphql-tag "^2.11.0"
@@ -697,21 +705,21 @@ apollo-server-errors@^3.3.1:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-3.3.1.tgz#ba5c00cdaa33d4cbd09779f8cb6f47475d1cd655"
   integrity sha512-xnZJ5QWs6FixHICXHxUfm+ZWqqxrNuPlQ+kj5m6RtEgIpekOPssH/SD9gf2B4HuWV0QozorrygwZnux8POvyPA==
 
-apollo-server-plugin-base@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-3.6.0.tgz#f85e19fa4a33866ef1b4235077397a63a9a7343e"
-  integrity sha512-GtXhczRGpTLQyFPWeWSnX1VcN2JaaAU7WT8PzoTQuJKYJ/Aj5mPebHbfG+PXQlDmI8IgyCKf7B1HIRnJqvAZbg==
+apollo-server-plugin-base@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-3.6.1.tgz#33e9f26433d5a8b8ed5d27e9fa88de9ef0c2c704"
+  integrity sha512-bFpxzWO0LTTtSAkGVBeaAtnQXJ5ZCi8eaLN/eMSju8RByifmF3Kr6gAqcOZhOH/geQEt3Y6G8n3bR0eHTGxljQ==
   dependencies:
-    apollo-server-types "^3.6.0"
+    apollo-server-types "^3.6.1"
 
-apollo-server-types@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/apollo-server-types/-/apollo-server-types-3.6.0.tgz#29fd8369aad99d42f72b760eb12bfe2c888da901"
-  integrity sha512-zISCkwXvwTHK2AysWSfLAUvDLSDJ0xj8pnfxDv34hqA+G9JqsLbykJdSL1Y1kT53HU4RWF6ymTuTwwOmmBiAWA==
+apollo-server-types@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-types/-/apollo-server-types-3.6.1.tgz#704e5309bd947306030df01f982e36d1d4753eaa"
+  integrity sha512-XOPlBlRdwP00PrG03OffGGWuzyei+J9t1rAnvyHsSdP0JCgQWigHJfvL1N9Bhgi4UTjl9JadKOJh1znLNlqIFQ==
   dependencies:
+    "@apollo/utils.keyvaluecache" "^1.0.1"
     "@apollo/utils.logger" "^1.0.0"
     apollo-reporting-protobuf "^3.3.1"
-    apollo-server-caching "^3.3.0"
     apollo-server-env "^4.2.1"
 
 async-retry@^1.2.1:
@@ -1153,6 +1161,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lru-cache@^7.10.1:
+  version "7.10.1"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.10.1.tgz#db577f42a94c168f676b638d15da8fb073448cab"
+  integrity sha512-BQuhQxPuRl79J5zSXRP+uNzPOyZw2oFI9JLRQ80XswSvg21KMKNtQza9eF42rfI/3Z40RvzBdXgziEkudzjo8A==
+
 magic-string@^0.25.3:
   version "0.25.9"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.9.tgz#de7f9faf91ef8a1c91d02c2e5314c8277dbcdd1c"
@@ -1176,6 +1189,11 @@ mime-types@^2.1.27:
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
   dependencies:
     mime-db "1.52.0"
+
+mime@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
+  integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
 
 miniflare@^2.5.0:
   version "2.5.0"
@@ -1539,11 +1557,12 @@ whatwg-url@^5.0.0:
     tr46 "~0.0.3"
     webidl-conversions "^3.0.0"
 
-wrangler@2.0.9:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/wrangler/-/wrangler-2.0.9.tgz#bf4dc8a6a710fc8caa3d85b13e71a23dbde1a270"
-  integrity sha512-qRmjOHQKUaylxQFjVt0IniY5tu/KFi4BWwSm7C33Lr7oQNSC/ANUn9K8wJew9DtrnTw7arhhK1qbGAxB/IEo+w==
+wrangler@2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/wrangler/-/wrangler-2.0.12.tgz#506af20c67aa2b8dbed480713f1103814a943d08"
+  integrity sha512-Dnzqxl3vW5J16Lt3gEbl/teNnTuAqMwsuMexR7BFSHWTwfWjHT9Sc7B6bPIKw0O01zDU/hUscw8nkyhMMM3xDw==
   dependencies:
+    "@cloudflare/kv-asset-handler" "^0.2.0"
     "@esbuild-plugins/node-globals-polyfill" "^0.1.1"
     "@esbuild-plugins/node-modules-polyfill" "^0.1.4"
     blake3-wasm "^2.1.5"
