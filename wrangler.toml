@@ -2,9 +2,6 @@ name = "cgql"
 main = "src/index.js"
 
 node_compat = true
-type = "webpack"
-
 workers_dev = true
-webpack_config = "webpack.config.js"
 
 compatibility_date = "2022-06-10"

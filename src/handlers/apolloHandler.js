@@ -6,6 +6,7 @@ import schema from "../schema";
 const server = new ApolloServer({
   schema,
   introspection: true, // enable introspection in apollo studio
+  csrfPrevention: true, // enable csrf prevention in apollo studio
   cache: "bounded",
   context: async ({ request }) => {
     const authorization = request.headers.get("authorization");
