@@ -19,6 +19,7 @@ const authCheck = async (request) => {
 
     if (error) throw new Error("No authorized user found");
 
+    delete user.password;
     return {
       user,
     };
