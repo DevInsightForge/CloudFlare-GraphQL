@@ -1,5 +1,5 @@
 import { GraphQLObjectType } from "graphql";
-import RefreshJWT from "./Mutations/RefreshJWT";
+import RefreshAccess from "./Mutations/RefreshAccess";
 import SignIn from "./Mutations/SignIn";
 import SignUp from "./Mutations/SignUp";
 
@@ -8,7 +8,7 @@ const Mutation = new GraphQLObjectType({
   fields: {
     signup: SignUp,
     signin: SignIn,
-    refreshJWT: RefreshJWT,
+    RefreshAccess: RefreshAccess,
   },
 });
 

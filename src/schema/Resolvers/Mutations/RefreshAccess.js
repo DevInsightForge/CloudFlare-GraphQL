@@ -2,10 +2,9 @@ import jwt from "@tsndr/cloudflare-worker-jwt";
 import { AuthenticationError } from "apollo-server-cloudflare";
 import { GraphQLString } from "graphql";
 import pgClient from "../../../utils/pgClient";
-import TokenType from "../../TypeDefs/TokenType";
 
-const RefreshJWT = {
-  type: TokenType,
+const RefreshAccess = {
+  type: GraphQLString,
   args: {
     refreshToken: { type: GraphQLString },
   },
@@ -33,20 +32,18 @@ const RefreshJWT = {
         "No user associated with this token. Please sign up."
       );
 
-    const userToken = {
-      accessToken: await jwt.sign(
+    return (
+      "Bearer " +
+      (await jwt.sign(
         {
           id,
           name,
           exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
         },
         `cgqlJWT`
-      ),
-      refreshToken,
-    };
-
-    return userToken;
+      ))
+    );
   },
 };
 
-export default RefreshJWT;
+export default RefreshAccess;

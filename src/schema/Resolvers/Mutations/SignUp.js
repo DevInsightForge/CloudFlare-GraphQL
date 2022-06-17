@@ -38,23 +38,27 @@ const SignUp = {
       throw new AuthenticationError("Email already exists. Please sign in.");
 
     const userToken = {
-      accessToken: await jwt.sign(
-        {
-          id,
-          name,
-          exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
-        },
-        `cgqlJWT`
-      ),
+      accessToken:
+        "Bearer " +
+        (await jwt.sign(
+          {
+            id,
+            name,
+            exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
+          },
+          `cgqlJWT`
+        )),
 
-      refreshToken: await jwt.sign(
-        {
-          id,
-          email,
-          exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
-        },
-        `cgqlJWT`
-      ),
+      refreshToken:
+        "Bearer " +
+        (await jwt.sign(
+          {
+            id,
+            email,
+            exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
+          },
+          `cgqlJWT`
+        )),
     };
 
     return userToken;
