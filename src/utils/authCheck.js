@@ -6,7 +6,7 @@ const authCheck = async (request) => {
   try {
     if (!authorization) throw new Error("No authorization header found");
     const token = authorization.split(" ")[1];
-    const isValid = await jwt.verify(token, `cgqlJWT`);
+    const isValid = await jwt.verify(token, SECRET);
     if (!isValid)
       throw new Error("Provided token is either expired or invalid.");
 
