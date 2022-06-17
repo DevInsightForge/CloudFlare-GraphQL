@@ -38,7 +38,7 @@ const SignUp = {
     if (error)
       throw new AuthenticationError("Email already exists. Please sign in.");
 
-    const { id, name, email, password } = newUser;
+    const { id, name, email } = newUser;
     const userToken = {
       accessToken:
         "Bearer " +
@@ -48,7 +48,7 @@ const SignUp = {
             name,
             exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
           },
-          password
+          SECRET
         )),
 
       refreshToken:
@@ -59,7 +59,7 @@ const SignUp = {
             email,
             exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
           },
-          password
+          SECRET
         )),
     };
 

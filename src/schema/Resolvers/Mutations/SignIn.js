@@ -1,5 +1,6 @@
 import jwt from "@tsndr/cloudflare-worker-jwt";
 import { AuthenticationError } from "apollo-server-cloudflare";
+import bcrypt from "bcryptjs";
 import { GraphQLString } from "graphql";
 import pgClient from "../../../utils/pgClient";
 import TokenType from "../../TypeDefs/TokenType";
@@ -10,11 +11,8 @@ const SignIn = {
     email: { type: GraphQLString },
     password: { type: GraphQLString },
   },
-  async resolve(parent, args) {
-    const {
-      data: { id, name, email, password },
-      error,
-    } = await pgClient
+  async resolve(_, args) {
+    const { data: user, error } = await pgClient
       .from("users")
       .select("*")
       .eq("email", args.email.toLowerCase())
@@ -25,35 +23,36 @@ const SignIn = {
         "No user associated with this email. Please sign up."
       );
 
-    if (password === args.password) {
-      const userToken = {
-        accessToken:
-          "Bearer " +
-          (await jwt.sign(
-            {
-              id,
-              name,
-              exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
-            },
-            `cgqlJWT`
-          )),
-
-        refreshToken:
-          "Bearer " +
-          (await jwt.sign(
-            {
-              id,
-              email,
-              exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
-            },
-            `cgqlJWT`
-          )),
-      };
-
-      return userToken;
-    } else {
+    const { id, name, email, password } = user;
+    const authorized = await bcrypt.compare(args.password, password);
+    if (!authorized)
       throw new AuthenticationError("Incorrect password. Please Try Again!");
-    }
+
+    const userToken = {
+      accessToken:
+        "Bearer " +
+        (await jwt.sign(
+          {
+            id,
+            name,
+            exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
+          },
+          SECRET
+        )),
+
+      refreshToken:
+        "Bearer " +
+        (await jwt.sign(
+          {
+            id,
+            email,
+            exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
+          },
+          SECRET
+        )),
+    };
+
+    return userToken;
   },
 };
 

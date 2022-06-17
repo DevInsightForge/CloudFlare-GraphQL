@@ -40,7 +40,7 @@ const RefreshAccess = {
           name,
           exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
         },
-        `cgqlJWT`
+        SECRET
       ))
     );
   },
