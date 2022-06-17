@@ -1,5 +1,6 @@
 import jwt from "@tsndr/cloudflare-worker-jwt";
 import { AuthenticationError } from "apollo-server-cloudflare";
+import bcrypt from "bcryptjs";
 import { GraphQLString } from "graphql";
 import pgClient from "../../../utils/pgClient";
 import TokenType from "../../TypeDefs/TokenType";
@@ -27,16 +28,17 @@ const SignUp = {
     const payload = {
       name: args.name,
       email: args.email.toLowerCase(),
-      password: args.password,
+      password: await bcrypt.hash(args.password, 8),
     };
-    const {
-      data: { id, name, email },
-      error,
-    } = await pgClient.from("users").insert(payload).single();
+    const { data: newUser, error } = await pgClient
+      .from("users")
+      .insert(payload)
+      .single();
 
     if (error)
       throw new AuthenticationError("Email already exists. Please sign in.");
 
+    const { id, name, email, password } = newUser;
     const userToken = {
       accessToken:
         "Bearer " +
@@ -46,7 +48,7 @@ const SignUp = {
             name,
             exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
           },
-          `cgqlJWT`
+          password
         )),
 
       refreshToken:
@@ -57,7 +59,7 @@ const SignUp = {
             email,
             exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
           },
-          `cgqlJWT`
+          password
         )),
     };
 
