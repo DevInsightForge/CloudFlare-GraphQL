@@ -12,47 +12,47 @@ const SignIn = {
     password: { type: GraphQLString },
   },
   async resolve(_, args) {
-    const { data: user, error } = await pgClient
-      .from("users")
-      .select("*")
-      .eq("email", args.email.toLowerCase())
-      .single();
+    try {
+      const { data: user, error } = await pgClient
+        .from("users")
+        .select("*")
+        .eq("email", args.email.toLowerCase())
+        .single();
 
-    if (error)
-      throw new AuthenticationError(
-        "No user associated with this email. Please sign up."
-      );
+      if (error)
+        throw new Error("No user associated with this email. Please sign up.");
 
-    const { id, name, email, password } = user;
-    const authorized = await bcrypt.compare(args.password, password);
-    if (!authorized)
-      throw new AuthenticationError("Incorrect password. Please Try Again!");
+      const authorized = await bcrypt.compare(args.password, user.password);
+      if (!authorized) throw new Error("Incorrect password. Please Try Again!");
 
-    const userToken = {
-      accessToken:
-        "Bearer " +
-        (await jwt.sign(
-          {
-            id,
-            name,
-            exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
-          },
-          SECRET
-        )),
+      const userToken = {
+        accessToken:
+          "Bearer " +
+          (await jwt.sign(
+            {
+              id: user.id,
+              name: user.name,
+              exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
+            },
+            SECRET
+          )),
 
-      refreshToken:
-        "Bearer " +
-        (await jwt.sign(
-          {
-            id,
-            email,
-            exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
-          },
-          SECRET
-        )),
-    };
+        refreshToken:
+          "Bearer " +
+          (await jwt.sign(
+            {
+              id: user.id,
+              email: user.email,
+              exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
+            },
+            SECRET
+          )),
+      };
 
-    return userToken;
+      return userToken;
+    } catch (error) {
+      throw new AuthenticationError(error.message);
+    }
   },
 };
 
