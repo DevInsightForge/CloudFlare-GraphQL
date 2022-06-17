@@ -32,7 +32,7 @@ const SignUp = {
         password: await bcrypt.hash(args.password, 8),
       };
       const { data: newUser, error } = await pgClient
-        .from("users")
+        .from("Users")
         .insert(payload)
         .single();
 

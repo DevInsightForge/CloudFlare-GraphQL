@@ -8,7 +8,7 @@ const GetAllUsers = {
   async resolve(parent, args, { authError }) {
     if (authError) throw new AuthenticationError(authError);
 
-    const { data: users, error } = await pgClient.from("users").select("*");
+    const { data: users, error } = await pgClient.from("Users").select("*");
 
     if (error) throw new Error("Error getting user list from database");
 

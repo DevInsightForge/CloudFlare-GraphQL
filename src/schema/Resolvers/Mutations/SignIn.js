@@ -14,7 +14,7 @@ const SignIn = {
   async resolve(_, args) {
     try {
       const { data: user, error } = await pgClient
-        .from("users")
+        .from("Users")
         .select("*")
         .eq("email", args.email.toLowerCase())
         .single();

@@ -12,7 +12,7 @@ const authCheck = async (request) => {
 
     const { payload } = jwt.decode(token);
     const { data: user, error } = await pgClient
-      .from("users")
+      .from("Users")
       .select("*")
       .eq("id", payload.id)
       .single();

@@ -18,7 +18,7 @@ const RefreshAccess = {
         throw new Error("Provided token is either expired or invalid.");
 
       const { data: user, error } = await pgClient
-        .from("users")
+        .from("Users")
         .select("*")
         .eq("email", payload.email.toLowerCase())
         .single();
