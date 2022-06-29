@@ -43,8 +43,8 @@ const SignUp = {
           "Bearer " +
           (await jwt.sign(
             {
-              id: user.id,
-              name: user.name,
+              id: newUser.id,
+              name: newUser.name,
               exp: Math.floor(Date.now() / 1000) + 12 * (60 * 60), // Expires: Now + 12h
             },
             SECRET
@@ -54,8 +54,8 @@ const SignUp = {
           "Bearer " +
           (await jwt.sign(
             {
-              id: user.id,
-              email: user.email,
+              id: newUser.id,
+              email: newUser.email,
               exp: Math.floor(Date.now() / 1000) + 7 * (24 * 60 * 60), // Expires: Now + 7d
             },
             SECRET
