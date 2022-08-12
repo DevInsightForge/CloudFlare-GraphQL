@@ -16,13 +16,13 @@ const SignIn = {
       const { data: user, error } = await pgClient
         .from("Users")
         .select("*")
-        .eq("email", args.email.toLowerCase())
+        .eq("email", args?.email?.toLowerCase())
         .single();
 
       if (error)
         throw new Error("No user associated with this email. Please sign up.");
 
-      const authorized = await bcrypt.compare(args.password, user.password);
+      const authorized = await bcrypt.compare(args?.password, user.password);
       if (!authorized) throw new Error("Incorrect password. Please Try Again!");
 
       const userToken = {
